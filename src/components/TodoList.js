@@ -6,8 +6,7 @@ import { toast } from "react-toastify";
 import { URL } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, addTodoItems } from '../redux/todoSlice';
-import { v4 as uuidv4 } from 'uuid';
+import { addTodo, addTodoItems } from "../redux/todoSlice";
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -62,7 +61,7 @@ const TodoList = () => {
   };
 
   const setToComplete = async (task) => {
-      const newFormData = {
+    const newFormData = {
       name: task.name,
       completed: true,
     };
@@ -86,13 +85,14 @@ const TodoList = () => {
       const newTodo = { ...formData, id: newId };
       const { data } = await axios.post(`${URL}/todos`, newTodo, {
         headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+          "Content-type": "application/json; charset=UTF-8",
         },
       });
       console.log("Created Task :", data);
       toast.success("Task added Successfully");
       setFormData({ ...formData, title: "" });
       dispatch(addTodoItems([...todos, newTodo]));
+      getTodoItemsFromStore();
     } catch (error) {
       toast.error(error.message);
       console.log(error);
@@ -105,14 +105,18 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty.");
     }
     try {
-    //   await axios.put(`${URL}/api/tasks/${taskID}`, formData);
-    //   setFormData({ ...formData, title: "" });
+      //   await axios.put(`${URL}/api/tasks/${taskID}`, formData);
+      //   setFormData({ ...formData, title: "" });
       setIsEditing(false);
-    //   getTasks();
-    //   toast.success("Task Updated Successfully");
+      //   getTasks();
+      //   toast.success("Task Updated Successfully");
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  const getTodoItemsFromStore = () => {
+    setTodoItems(todos);
   };
 
   const sampleTodos = [
@@ -132,7 +136,12 @@ const TodoList = () => {
 
   useEffect(() => {
     getTodoItem();
+    getTodoItemsFromStore();
   }, []);
+
+  useEffect(() => {
+    getTodoItemsFromStore();
+  }, [todos]);
 
   // useEffect(() => {
   //   const comTask = sampleTodos.filter((todoItem)=>{
