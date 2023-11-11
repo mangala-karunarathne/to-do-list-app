@@ -1,9 +1,16 @@
-import './App.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import TodoList from "./components/TodoList";
+
+export const URL = process.env.REACT_APP_SERVER_URL
 
 function App() {
   return (
-    <div className="App">
-      <h1>To Do List</h1>
+    <div className="app">
+      <div className="task-container">
+        <TodoList />
+      </div>
+      <ToastContainer />
     </div>
   );
 }
