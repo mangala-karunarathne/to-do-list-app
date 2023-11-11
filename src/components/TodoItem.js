@@ -6,16 +6,34 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../App";
 
-const TodoItem = ({index}) => {
+const TodoItem = ({ index }) => {
   const todoItem = useSelector((state) => state.todos[index]);
   const dispatch = useDispatch();
 
-  const setToComplete = () => {
-    dispatch(toggleComplete({ id: todoItem.id, completed: !todoItem.completed }));
+  const setToComplete = async () => {
+    dispatch(
+      toggleComplete({ id: todoItem.id, completed: !todoItem.completed })
+    );
+    const newFormData = {
+      title: todoItem.title,
+      completed: !todoItem.completed,
+    };
+    try {
+      const res = await axios.put(`${URL}/todos/${todoItem.id}`, newFormData);
+      if (res?.data?.completed === true) {
+        toast.success(`Task ${todoItem.id} Marked as Completed Successfully`);
+      } else if (res?.data?.completed === false) {
+        toast.warning(
+          `Task ${todoItem.id} Marked as Not Completed Successfully`
+        );
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const getSingleTodoItem = () => {
-    // 
+    //
   };
 
   const deleteTodoItem = async () => {
@@ -35,7 +53,7 @@ const TodoItem = ({index}) => {
         {todoItem && todoItem.title ? todoItem.title : ""}
       </p>
       <div className="task-icons">
-      <FaCheckDouble color="green" onClick={setToComplete} />
+        <FaCheckDouble color="green" onClick={setToComplete} />
         <FaEdit color="purple" onClick={getSingleTodoItem} />
         <FaRegTrashAlt color="red" onClick={deleteTodoItem} />
       </div>

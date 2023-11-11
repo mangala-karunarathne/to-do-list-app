@@ -62,20 +62,6 @@ const TodoList = () => {
     setIsEditing(true);
   };
 
-  const setToComplete = async (task) => {
-    const newFormData = {
-      name: task.name,
-      completed: true,
-    };
-    // try {
-    //   await axios.put(`${URL}/api/tasks/${task._id}`, newFormData);
-    //   getTasks();
-    //   toast.success("Task Marked as Completed Successfully");
-    // } catch (error) {
-    //   toast.error(error.message);
-    // }
-  };
-
   const createTodoItem = async (e) => {
     e.preventDefault();
     console.log(formData);
