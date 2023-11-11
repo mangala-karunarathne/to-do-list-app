@@ -135,7 +135,7 @@ const TodoList = () => {
   ];
 
   useEffect(() => {
-    getTodoItem();
+    // getTodoItem();
     getTodoItemsFromStore();
   }, []);
 
@@ -187,10 +187,10 @@ const TodoList = () => {
                 key={todoItem.id}
                 todoItem={todoItem}
                 index={index}
-                deleteTodoItem={deleteTodoItem}
-                getSingleTodoItem={getSingleTodoItem}
-                isEditing={isEditing}
-                setToComplete={setToComplete}
+                // deleteTodoItem={deleteTodoItem}
+                // getSingleTodoItem={getSingleTodoItem}
+                // isEditing={isEditing}
+                // setToComplete={setToComplete}
               />
             );
           })}
