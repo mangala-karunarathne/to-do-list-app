@@ -5,8 +5,8 @@ const todoSlice = createSlice({
   initialState: [],
   reducers: {
     addTodoItems: (state, action) => {
-      const uniqueIds = new Set(state.map(todo => todo.id));
-      action.payload.forEach(todo => {
+      const uniqueIds = new Set(state.map((todo) => todo.id));
+      action.payload.forEach((todo) => {
         if (!uniqueIds.has(todo.id)) {
           state.push(todo);
           uniqueIds.add(todo.id);
@@ -17,13 +17,22 @@ const todoSlice = createSlice({
       state.push(action.payload);
     },
     editTodo: (state, action) => {
-      //
+      const { id, updatedTodo } = action.payload;
+      const todoIndex = state.findIndex((todo) => todo.id === id);
+      if (todoIndex !== -1) {
+        state[todoIndex] = { ...state[todoIndex], ...updatedTodo };
+      }
     },
     deleteTodo: (state, action) => {
-      //
+      const idToDelete = action.payload.id;
+      return state.filter((todo) => todo.id !== idToDelete);
     },
     toggleComplete: (state, action) => {
-      //
+      const { id, completed } = action.payload;
+      const todoIndex = state.findIndex((todo) => todo.id === id);
+      if (todoIndex !== -1) {
+        state[todoIndex].completed = completed;
+      }
     },
   },
 });
