@@ -5,6 +5,9 @@ import loadingImg from "../assets/loader.gif";
 import { toast } from "react-toastify";
 import { URL } from "../App";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, addTodoItems } from '../redux/todoSlice';
+import { v4 as uuidv4 } from 'uuid';
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -16,6 +19,8 @@ const TodoList = () => {
     title: "",
     completed: false,
   });
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos);
   const { title } = formData;
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +36,7 @@ const TodoList = () => {
       const { data } = await axios.get(`${URL}/todos`);
       console.log(data);
       setTodoItems(data);
+      dispatch(addTodoItems(data));
       setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
@@ -76,14 +82,17 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty");
     }
     try {
-      await axios.post(`${URL}/todos`, formData, {
+      const newId = todos.length + 1;
+      const newTodo = { ...formData, id: newId };
+      const { data } = await axios.post(`${URL}/todos`, newTodo, {
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
       });
+      console.log("Created Task :", data);
       toast.success("Task added Successfully");
       setFormData({ ...formData, title: "" });
-      getTodoItem();
+      dispatch(addTodoItems([...todos, newTodo]));
     } catch (error) {
       toast.error(error.message);
       console.log(error);
