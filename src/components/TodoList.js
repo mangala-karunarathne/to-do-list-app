@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { URL } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, addTodoItems } from "../redux/todoSlice";
+import { addTodo, addTodoItems, deleteTodo } from "../redux/todoSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -44,15 +45,16 @@ const TodoList = () => {
     }
   };
 
-  const deleteTodoItem = async (id) => {
-    // try {
-    //   await axios.delete(`${URL}/api/tasks/${id}`);
-    //   toast.success(" Task deleted Succesfully");
-    //   getTasks();
-    // } catch (error) {
-    //   toast.error(error.message);
-    // }
-  };
+  // const deleteTodoItem = async (id) => {
+  //   try {
+  //     await axios.delete(`${URL}/todos/${id}`);
+  //     dispatch(deleteTodo(id));
+  //     toast.success(" Task deleted Succesfully");
+  //     // getTasks();
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   const getSingleTodoItem = async (task) => {
     setFormData({ name: task.name, completed: false });
@@ -81,8 +83,9 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty");
     }
     try {
-      const newId = todos.length + 1;
-      const newTodo = { ...formData, id: newId };
+      // const newId = todos.length + 1;
+      // const newTodo = { ...formData, id: newId };
+      const newTodo = { ...formData, id: uuidv4() };
       const { data } = await axios.post(`${URL}/todos`, newTodo, {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -135,7 +138,7 @@ const TodoList = () => {
   ];
 
   useEffect(() => {
-    // getTodoItem();
+    getTodoItem();
     getTodoItemsFromStore();
   }, []);
 

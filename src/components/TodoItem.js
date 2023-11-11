@@ -2,6 +2,9 @@ import { FaEdit, FaCheckDouble, FaRegTrashAlt } from "react-icons/fa";
 
 import { useSelector, useDispatch } from "react-redux";
 import { editTodo, deleteTodo, toggleComplete } from "../redux/todoSlice";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { URL } from "../App";
 
 const TodoItem = ({index}) => {
   const todoItem = useSelector((state) => state.todos[index]);
@@ -15,8 +18,14 @@ const TodoItem = ({index}) => {
     // 
   };
 
-  const deleteTodoItem = () => {
-    dispatch(deleteTodo({ id: todoItem.id }));
+  const deleteTodoItem = async () => {
+    try {
+      await axios.delete(`${URL}/todos/${todoItem.id}`);
+      dispatch(deleteTodo({ id: todoItem.id }));
+      toast.success(" Task deleted Succesfully");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
