@@ -5,8 +5,9 @@ import { editTodo, deleteTodo, toggleComplete } from "../redux/todoSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { URL } from "../App";
+import { useState } from "react";
 
-const TodoItem = ({ index }) => {
+const TodoItem = ({ index, getSingleTodoItem }) => {
   const todoItem = useSelector((state) => state.todos[index]);
   const dispatch = useDispatch();
 
@@ -32,10 +33,6 @@ const TodoItem = ({ index }) => {
     }
   };
 
-  const getSingleTodoItem = () => {
-    //
-  };
-
   const deleteTodoItem = async () => {
     try {
       await axios.delete(`${URL}/todos/${todoItem.id}`);
@@ -54,7 +51,7 @@ const TodoItem = ({ index }) => {
       </p>
       <div className="task-icons">
         <FaCheckDouble color="green" onClick={setToComplete} />
-        <FaEdit color="purple" onClick={getSingleTodoItem} />
+        <FaEdit color="purple" onClick={() => getSingleTodoItem(todoItem || "")} />
         <FaRegTrashAlt color="red" onClick={deleteTodoItem} />
       </div>
     </div>
