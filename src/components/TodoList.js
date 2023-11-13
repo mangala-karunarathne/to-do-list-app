@@ -6,14 +6,20 @@ import { toast } from "react-toastify";
 import { URL } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, addTodoItems, deleteTodo } from "../redux/todoSlice";
-import { v4 as uuidv4 } from 'uuid';
+import {
+  addTodo,
+  addTodoItems,
+  deleteTodo,
+  editTodo,
+} from "../redux/todoSlice";
+import { v4 as uuidv4 } from "uuid";
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [taskID, setTaskID] = useState("");
   const [formData, setFormData] = useState({
     userId: 1,
     title: "",
@@ -45,21 +51,12 @@ const TodoList = () => {
     }
   };
 
-  // const deleteTodoItem = async (id) => {
-  //   try {
-  //     await axios.delete(`${URL}/todos/${id}`);
-  //     dispatch(deleteTodo(id));
-  //     toast.success(" Task deleted Succesfully");
-  //     // getTasks();
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
-
-  const getSingleTodoItem = async (task) => {
-    setFormData({ name: task.name, completed: false });
-    // setTaskID(task._id);
-    setIsEditing(true);
+  const getSingleTodoItem = (todoItem) => {
+    if (todoItem && todoItem.title) {
+      setFormData({ title: todoItem.title, completed: false });
+      setTaskID(todoItem.id);
+      setIsEditing(true);
+    }
   };
 
   const createTodoItem = async (e) => {
@@ -90,15 +87,19 @@ const TodoList = () => {
 
   const updateTodoItem = async (e) => {
     e.preventDefault();
-    if (title === "") {
+    if (formData.title === "") {
       return toast.error("Input field cannot be empty.");
     }
     try {
-      //   await axios.put(`${URL}/api/tasks/${taskID}`, formData);
-      //   setFormData({ ...formData, title: "" });
+      const { data } = await axios.put(`${URL}/todos/${taskID}`, formData, {
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      setFormData({ ...formData, title: "" });
       setIsEditing(false);
-      //   getTasks();
-      //   toast.success("Task Updated Successfully");
+      dispatch(editTodo({ id: taskID, updatedTodo: data }));
+      toast.success("Task Updated Successfully");
     } catch (error) {
       toast.error(error.message);
     }
@@ -125,7 +126,6 @@ const TodoList = () => {
 
   useEffect(() => {
     getTodoItem();
-    getTodoItemsFromStore();
   }, []);
 
   useEffect(() => {
@@ -144,6 +144,8 @@ const TodoList = () => {
       <h2>To do List</h2>
       <AddTodoForm
         title={title}
+        // index={index}
+        taskID={taskID}
         handleInputChange={handleInputChange}
         createTodoItem={createTodoItem}
         isEditing={isEditing}
@@ -176,9 +178,13 @@ const TodoList = () => {
                 key={todoItem.id}
                 todoItem={todoItem}
                 index={index}
+                // setTaskID={setTaskID}
                 // deleteTodoItem={deleteTodoItem}
-                // getSingleTodoItem={getSingleTodoItem}
-                // isEditing={isEditing}
+                getSingleTodoItem={getSingleTodoItem}
+                isEditing={isEditing}
+                // setIsEditing={setIsEditing}
+                formData={formData}
+                setFormData={setFormData}
                 // setToComplete={setToComplete}
               />
             );

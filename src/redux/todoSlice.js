@@ -18,10 +18,7 @@ const todoSlice = createSlice({
     },
     editTodo: (state, action) => {
       const { id, updatedTodo } = action.payload;
-      const todoIndex = state.findIndex((todo) => todo.id === id);
-      if (todoIndex !== -1) {
-        state[todoIndex] = { ...state[todoIndex], ...updatedTodo };
-      }
+      return state.map((todo) => (todo.id === id ? { ...todo, ...updatedTodo } : todo));
     },
     deleteTodo: (state, action) => {
       const idToDelete = action.payload.id;
