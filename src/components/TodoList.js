@@ -129,7 +129,7 @@ const TodoList = () => {
     };
     try {
       setIsLoading(true);
-      const res = await axios.put(`${URL}/todos/${todos.id}`, newFormData);
+      const res = await axios.put(`${URL}/todos/${todoItem.id}`, newFormData);
       if (res?.data?.completed === true) {
         toast.success("Marked as Completed Successfully");
       } else if (res?.data?.completed === false) {
