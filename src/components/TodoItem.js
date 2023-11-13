@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { URL } from "../App";
 import { useState } from "react";
 
-const TodoItem = ({ index, getSingleTodoItem }) => {
+const TodoItem = ({ index, getSingleTodoItem, setIsLoading }) => {
   const todoItem = useSelector((state) => state.todos[index]);
   const dispatch = useDispatch();
 
@@ -20,14 +20,16 @@ const TodoItem = ({ index, getSingleTodoItem }) => {
       completed: !todoItem.completed,
     };
     try {
+      setIsLoading(true);
       const res = await axios.put(`${URL}/todos/${todoItem.id}`, newFormData);
       if (res?.data?.completed === true) {
-        toast.success(`Task ${todoItem.id} Marked as Completed Successfully`);
+        toast.success("Marked as Completed Successfully");
       } else if (res?.data?.completed === false) {
         toast.warning(
-          `Task ${todoItem.id} Marked as Not Completed Successfully`
+          "Marked as Not Completed Successfully"
         );
       }
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
     }
@@ -35,11 +37,14 @@ const TodoItem = ({ index, getSingleTodoItem }) => {
 
   const deleteTodoItem = async () => {
     try {
+      setIsLoading(true);
       await axios.delete(`${URL}/todos/${todoItem.id}`);
       dispatch(deleteTodo({ id: todoItem.id }));
-      toast.success(" Task deleted Succesfully");
+      toast.success("Task deleted Succesfully");
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
+      setIsLoading(false);
     }
   };
 
