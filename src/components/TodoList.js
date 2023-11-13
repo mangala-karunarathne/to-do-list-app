@@ -25,7 +25,7 @@ const TodoList = () => {
     userId: 1,
     title: "",
     completed: false,
-  });
+      });
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos);
@@ -119,11 +119,11 @@ const TodoList = () => {
   const searched = (keyword) => (todoItem) =>
     todoItem.title.toLowerCase().includes(keyword);
 
-  const setToComplete = async () => {
-    dispatch(toggleComplete({ id: todos.id, completed: !todos.completed }));
+  const setToComplete = async (todoItem) => {
+    dispatch(toggleComplete({ id: todoItem.id, completed: !todoItem.completed }));
     const newFormData = {
-      title: todos.title,
-      completed: !todos.completed,
+      title: todoItem.title,
+      completed: !todoItem.completed,
     };
     try {
       setIsLoading(true);
@@ -139,11 +139,11 @@ const TodoList = () => {
     }
   };
 
-  const deleteTodoItem = async () => {
+  const deleteTodoItem = async (id) => {
     try {
       setIsLoading(true);
-      await axios.delete(`${URL}/todos/${todos.id}`);
-      dispatch(deleteTodo({ id: todos.id }));
+      await axios.delete(`${URL}/todos/${id}`);
+      dispatch(deleteTodo({ id: id }));
       toast.success("Task deleted Succesfully");
       setIsLoading(false);
     } catch (error) {
@@ -171,25 +171,14 @@ const TodoList = () => {
         isEditing={isEditing}
         updateTodoItem={updateTodoItem}
       />
-      <div>
+      <div className="search-form">
         <input
           type="search"
-          placeholder="Filter"
+          placeholder="Filter by Task Name" 
           value={keyword}
           onChange={handleSearchChange}
-          className="form-control mb-4"
         />
       </div>
-      {todoItems.length > 0 && (
-        <div className="--flex-between --pb">
-          <p>
-            <b>Total Tasks:</b> {todoItems.length}
-          </p>
-          <p>
-            <b>Completed Tasks:</b> {completedTasks.length}
-          </p>
-        </div>
-      )}
 
       <hr />
       {isLoading && (
@@ -219,12 +208,12 @@ const TodoList = () => {
                     {todoItem && todoItem.title ? todoItem.title : ""}
                   </p>
                   <div className="task-icons">
-                    <FaCheckDouble color="green" onClick={setToComplete} />
+                    <FaCheckDouble color="green" onClick={()=> setToComplete(todoItem)} />
                     <FaEdit
                       color="purple"
                       onClick={() => getSingleTodoItem(todoItem || "")}
                     />
-                    <FaRegTrashAlt color="red" onClick={deleteTodoItem} />
+                    <FaRegTrashAlt color="red" onClick={()=>deleteTodoItem(todoItem.id)} />
                   </div>
                 </div>
               );
