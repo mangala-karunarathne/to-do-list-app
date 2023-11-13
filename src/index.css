@@ -470,13 +470,39 @@ a:hover {
   outline: none;
   /* margin-right: 5px; */
 }
-.search-form input { 
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px; /* Adjust the gap as needed */
+  margin-top: 1%;
+}
+.search-form label {
+  display: block;
+  font-size: 14px;
+  color: #111111;
+  text-align: left;
+}
+.task-search {
+  display: flex;
+  flex-direction: column;
+}
+.task-search input[type="search"] {
   width: 100%;
-  height: 4rem;
-  font-size: 1.6rem;
-  padding: 0 5px;
-  outline: none;
-  /* margin-right: 5px; */
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.task-search select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 .add-to-do-form button {
   width: 15%;

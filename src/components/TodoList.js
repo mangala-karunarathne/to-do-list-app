@@ -17,7 +17,7 @@ import { FaCheckDouble, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
+  // const [completedTasks, setCompletedTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [taskID, setTaskID] = useState("");
@@ -27,6 +27,7 @@ const TodoList = () => {
     completed: false,
   });
   const [keyword, setKeyword] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos);
   const { title } = formData;
@@ -116,8 +117,10 @@ const TodoList = () => {
     console.log("filter value", keyword);
   };
 
-  const searched = (keyword) => (todoItem) =>
-    todoItem.title.toLowerCase().includes(keyword);
+  const handleStatusSearchChange = (e) => {
+    e.preventDefault();
+    setSelectedStatus(e.target.value);
+  };
 
   const setToComplete = async (todoItem) => {
     dispatch(
@@ -193,12 +196,27 @@ const TodoList = () => {
         updateTodoItem={updateTodoItem}
       />
       <div className="search-form">
-        <input
-          type="search"
-          placeholder="Filter by Task Name"
-          value={keyword}
-          onChange={handleSearchChange}
-        />
+        <div className="task-search">
+          <label htmlFor="title">Serach With Title</label>
+          <input
+            type="search"
+            placeholder="Filter by Task Name"
+            value={keyword}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <div className="task-search">
+          <label htmlFor="completed">Serach With Status</label>
+          <select
+            name="completed"
+            onChange={handleStatusSearchChange}
+            value={selectedStatus}
+          >
+            <option value="">All</option>
+            <option value="true">Completed</option>
+            <option value="false">Not Completed</option>
+          </select>
+        </div>
       </div>
 
       <hr />
@@ -216,6 +234,14 @@ const TodoList = () => {
               const title = val.title.toLowerCase();
               const searchTerm = keyword.toLowerCase();
               return keyword === "" || title.includes(searchTerm);
+            })
+            .filter((val) => {
+              const isCompleted = val.completed.toString();
+              if (selectedStatus === "") {
+                return val;
+              } else if (isCompleted == selectedStatus) {
+                return val;
+              }
             })
             .map((todoItem, index) => {
               return (
