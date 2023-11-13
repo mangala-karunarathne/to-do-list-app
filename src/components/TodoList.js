@@ -40,7 +40,6 @@ const TodoList = () => {
     setIsLoading(true);
     try {
       const { data } = await axios.get(`${URL}/todos`);
-      console.log(data);
       setTodoItems(data);
       dispatch(addTodoItems(data));
       setIsLoading(false);
@@ -61,20 +60,16 @@ const TodoList = () => {
 
   const createTodoItem = async (e) => {
     e.preventDefault();
-    console.log(formData);
     if (title === "") {
       return toast.error("Input field cannot be empty");
     }
     try {
-      // const newId = todos.length + 1;
-      // const newTodo = { ...formData, id: newId };
       const newTodo = { ...formData, id: uuidv4() };
       const { data } = await axios.post(`${URL}/todos`, newTodo, {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      console.log("Created Task :", data);
       toast.success("Task added Successfully");
       setFormData({ ...formData, title: "" });
       dispatch(addTodoItems([...todos, newTodo]));
@@ -109,21 +104,6 @@ const TodoList = () => {
     setTodoItems(todos);
   };
 
-  const sampleTodos = [
-    {
-      userId: 1,
-      id: 1,
-      title: "delectus aut autem",
-      completed: false,
-    },
-    {
-      userId: 1,
-      id: 5,
-      title: "laboriosam mollitia et enim quasi adipisci quia provident illum",
-      completed: false,
-    },
-  ];
-
   useEffect(() => {
     getTodoItem();
   }, []);
@@ -132,19 +112,11 @@ const TodoList = () => {
     getTodoItemsFromStore();
   }, [todos]);
 
-  // useEffect(() => {
-  //   const comTask = sampleTodos.filter((todoItem)=>{
-  //     return todoItem.completed === true
-  //   })
-  //   setCompletedTasks(comTask)
-  // },[sampleTodos])
-
   return (
     <div>
       <h2>To do List</h2>
       <AddTodoForm
         title={title}
-        // index={index}
         taskID={taskID}
         handleInputChange={handleInputChange}
         createTodoItem={createTodoItem}
@@ -168,7 +140,7 @@ const TodoList = () => {
           <img src={loadingImg} alt="loading" />
         </div>
       )}
-      {!isLoading && sampleTodos.length === 0 ? (
+      {!isLoading && todoItems.length === 0 ? (
         <p className="--py">No task added. Please add a task</p>
       ) : (
         <>
@@ -178,14 +150,10 @@ const TodoList = () => {
                 key={todoItem.id}
                 todoItem={todoItem}
                 index={index}
-                // setTaskID={setTaskID}
-                // deleteTodoItem={deleteTodoItem}
                 getSingleTodoItem={getSingleTodoItem}
                 isEditing={isEditing}
-                // setIsEditing={setIsEditing}
                 formData={formData}
                 setFormData={setFormData}
-                // setToComplete={setToComplete}
               />
             );
           })}
