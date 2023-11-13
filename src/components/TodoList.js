@@ -64,6 +64,7 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty");
     }
     try {
+      setIsLoading(true);
       const newTodo = { ...formData, id: uuidv4() };
       const { data } = await axios.post(`${URL}/todos`, newTodo, {
         headers: {
@@ -74,6 +75,7 @@ const TodoList = () => {
       setFormData({ ...formData, title: "" });
       dispatch(addTodoItems([...todos, newTodo]));
       getTodoItemsFromStore();
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
       console.log(error);
@@ -86,6 +88,7 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty.");
     }
     try {
+      setIsLoading(true);
       const { data } = await axios.put(`${URL}/todos/${taskID}`, formData, {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -94,7 +97,8 @@ const TodoList = () => {
       setFormData({ ...formData, title: "" });
       setIsEditing(false);
       dispatch(editTodo({ id: taskID, updatedTodo: data }));
-      toast.success("Task Updated Successfully");
+      setIsLoading(false);
+      toast.success(`Task Updated Successfully`);
     } catch (error) {
       toast.error(error.message);
     }
@@ -153,6 +157,7 @@ const TodoList = () => {
                 getSingleTodoItem={getSingleTodoItem}
                 isEditing={isEditing}
                 formData={formData}
+                setIsLoading={setIsLoading}
                 setFormData={setFormData}
               />
             );
