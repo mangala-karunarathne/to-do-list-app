@@ -25,7 +25,7 @@ const TodoList = () => {
     userId: 1,
     title: "",
     completed: false,
-      });
+  });
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos);
@@ -120,7 +120,9 @@ const TodoList = () => {
     todoItem.title.toLowerCase().includes(keyword);
 
   const setToComplete = async (todoItem) => {
-    dispatch(toggleComplete({ id: todoItem.id, completed: !todoItem.completed }));
+    dispatch(
+      toggleComplete({ id: todoItem.id, completed: !todoItem.completed })
+    );
     const newFormData = {
       title: todoItem.title,
       completed: !todoItem.completed,
@@ -152,6 +154,25 @@ const TodoList = () => {
     }
   };
 
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData("text/plain", index);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+
+    const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+    const updatedTodos = [...todoItems];
+    const [draggedTodos] = updatedTodos.splice(draggedIndex, 1);
+    updatedTodos.splice(targetIndex, 0, draggedTodos);
+
+    setTodoItems(updatedTodos);
+  };
+
   useEffect(() => {
     getTodoItem();
   }, []);
@@ -174,7 +195,7 @@ const TodoList = () => {
       <div className="search-form">
         <input
           type="search"
-          placeholder="Filter by Task Name" 
+          placeholder="Filter by Task Name"
           value={keyword}
           onChange={handleSearchChange}
         />
@@ -199,6 +220,10 @@ const TodoList = () => {
             .map((todoItem, index) => {
               return (
                 <div
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
                   className={
                     todoItem && todoItem.completed ? "task completed" : "task"
                   }
@@ -208,12 +233,18 @@ const TodoList = () => {
                     {todoItem && todoItem.title ? todoItem.title : ""}
                   </p>
                   <div className="task-icons">
-                    <FaCheckDouble color="green" onClick={()=> setToComplete(todoItem)} />
+                    <FaCheckDouble
+                      color="green"
+                      onClick={() => setToComplete(todoItem)}
+                    />
                     <FaEdit
                       color="purple"
                       onClick={() => getSingleTodoItem(todoItem || "")}
                     />
-                    <FaRegTrashAlt color="red" onClick={()=>deleteTodoItem(todoItem.id)} />
+                    <FaRegTrashAlt
+                      color="red"
+                      onClick={() => deleteTodoItem(todoItem.id)}
+                    />
                   </div>
                 </div>
               );
