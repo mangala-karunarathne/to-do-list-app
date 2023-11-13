@@ -6,7 +6,12 @@ import { toast } from "react-toastify";
 import { URL } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo, addTodoItems, deleteTodo } from "../redux/todoSlice";
+import {
+  addTodo,
+  addTodoItems,
+  deleteTodo,
+  editTodo,
+} from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid";
 
 const TodoList = () => {
@@ -86,13 +91,14 @@ const TodoList = () => {
       return toast.error("Input field cannot be empty.");
     }
     try {
-      await axios.put(`${URL}/todos/${taskID}`, formData, {
+      const { data } = await axios.put(`${URL}/todos/${taskID}`, formData, {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
       setFormData({ ...formData, title: "" });
       setIsEditing(false);
+      dispatch(editTodo({ id: taskID, updatedTodo: data }));
       toast.success("Task Updated Successfully");
     } catch (error) {
       toast.error(error.message);
