@@ -2,7 +2,7 @@
 
 ### Check out the Deployed To-Do List App 🚀
 
-![To-Do List Interface](https://i.imgur.com/UbCfR68.png)
+![To-Do List Interface](https://i.imgur.com/csjX77I.png)
 
 Explore the live version on [https://to-do-list-emu2.onrender.com](https://to-do-list-emu2.onrender.com). 🌐
 
