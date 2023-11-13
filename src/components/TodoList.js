@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AddTodoForm from "./AddTodoForm";
-import TodoItem from "./TodoItem";
 import loadingImg from "../assets/loader.gif";
 import { toast } from "react-toastify";
 import { URL } from "../App";
@@ -11,8 +10,10 @@ import {
   addTodoItems,
   deleteTodo,
   editTodo,
+  toggleComplete,
 } from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid";
+import { FaCheckDouble, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -25,6 +26,7 @@ const TodoList = () => {
     title: "",
     completed: false,
   });
+  const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos);
   const { title } = formData;
@@ -108,6 +110,48 @@ const TodoList = () => {
     setTodoItems(todos);
   };
 
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    setKeyword(e.target.value.toLowerCase());
+    console.log("filter value", keyword);
+  };
+
+  const searched = (keyword) => (todoItem) =>
+    todoItem.title.toLowerCase().includes(keyword);
+
+  const setToComplete = async () => {
+    dispatch(toggleComplete({ id: todos.id, completed: !todos.completed }));
+    const newFormData = {
+      title: todos.title,
+      completed: !todos.completed,
+    };
+    try {
+      setIsLoading(true);
+      const res = await axios.put(`${URL}/todos/${todos.id}`, newFormData);
+      if (res?.data?.completed === true) {
+        toast.success("Marked as Completed Successfully");
+      } else if (res?.data?.completed === false) {
+        toast.warning("Marked as Not Completed Successfully");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const deleteTodoItem = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`${URL}/todos/${todos.id}`);
+      dispatch(deleteTodo({ id: todos.id }));
+      toast.success("Task deleted Succesfully");
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     getTodoItem();
   }, []);
@@ -127,6 +171,15 @@ const TodoList = () => {
         isEditing={isEditing}
         updateTodoItem={updateTodoItem}
       />
+      <div>
+        <input
+          type="search"
+          placeholder="Filter"
+          value={keyword}
+          onChange={handleSearchChange}
+          className="form-control mb-4"
+        />
+      </div>
       {todoItems.length > 0 && (
         <div className="--flex-between --pb">
           <p>
@@ -148,20 +201,34 @@ const TodoList = () => {
         <p className="--py">No task added. Please add a task</p>
       ) : (
         <>
-          {todoItems.map((todoItem, index) => {
-            return (
-              <TodoItem
-                key={todoItem.id}
-                todoItem={todoItem}
-                index={index}
-                getSingleTodoItem={getSingleTodoItem}
-                isEditing={isEditing}
-                formData={formData}
-                setIsLoading={setIsLoading}
-                setFormData={setFormData}
-              />
-            );
-          })}
+          {todoItems
+            .filter((val) => {
+              const title = val.title.toLowerCase();
+              const searchTerm = keyword.toLowerCase();
+              return keyword === "" || title.includes(searchTerm);
+            })
+            .map((todoItem, index) => {
+              return (
+                <div
+                  className={
+                    todoItem && todoItem.completed ? "task completed" : "task"
+                  }
+                >
+                  <p>
+                    <b>{index + 1}. </b>
+                    {todoItem && todoItem.title ? todoItem.title : ""}
+                  </p>
+                  <div className="task-icons">
+                    <FaCheckDouble color="green" onClick={setToComplete} />
+                    <FaEdit
+                      color="purple"
+                      onClick={() => getSingleTodoItem(todoItem || "")}
+                    />
+                    <FaRegTrashAlt color="red" onClick={deleteTodoItem} />
+                  </div>
+                </div>
+              );
+            })}
         </>
       )}
     </div>
