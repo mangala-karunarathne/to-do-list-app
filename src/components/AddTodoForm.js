@@ -3,7 +3,7 @@ import React from "react";
 const AddTodoForm = ({ createTodoItem, title, handleInputChange, isEditing, updateTodoItem}) => {
 
   return (
-    <form className="task-form" 
+    <form className="add-to-do-form" 
     onSubmit={isEditing ? updateTodoItem : createTodoItem}
     >
       <input

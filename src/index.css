@@ -457,12 +457,12 @@ a:hover {
   padding: 3rem 2rem;
 }
 
-.task-form {
+.add-to-do-form {
   width: 100%;
   margin: 2rem 0;
   display: flex;
 }
-.task-form input {
+.add-to-do-form input {
   width: 85%;
   height: 4rem;
   font-size: 1.6rem;
@@ -470,7 +470,15 @@ a:hover {
   outline: none;
   /* margin-right: 5px; */
 }
-.task-form button {
+.search-form input { 
+  width: 100%;
+  height: 4rem;
+  font-size: 1.6rem;
+  padding: 0 5px;
+  outline: none;
+  /* margin-right: 5px; */
+}
+.add-to-do-form button {
   width: 15%;
   height: 4rem;
   font-size: 1.8rem;
@@ -481,7 +489,7 @@ a:hover {
   transition: all 0.3s;
 }
 
-.task-form button:hover {
+.add-to-do-form button:hover {
   background-color: var(--color-primary);
 }
 
