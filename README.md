@@ -27,7 +27,7 @@ A complete crud operation based To Do List
 - [ ] Filter by deadlines
 - [ ] Add paginations
 
-## Running Locally
+## How to run Locally
 
 1. Clone the repository
 
@@ -35,13 +35,13 @@ A complete crud operation based To Do List
 https://github.com/mangala-karunarathne/to-do-list-app.git
 ```
 
-2. Install dependencies using pnpm
+2. Install dependencies using npm
 
 ```bash
 npm install
 ```
 
-3. Copy the `.env.example` to `.env` and update the variables.
+3. Copy the `.env.example` to `.env` and update the variables
 
 ```bash
 cp .env.example .env
