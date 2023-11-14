@@ -1,0 +1,14 @@
+Redux is configured in this project for global state management. Here also redux 
+is used and store all the todo items in redux store. As this json fake data 
+providers doesn't allow to change them, add new item, update and delete them exactly, 
+that issue has been resolved via redux store in this project. In this case, while 
+calling  remote API redux store also updated by dispatching the actions and display 
+them back in todo List by accessing updated items available in redux store. 
+
+If it's required to go ahead in this project with new features along with several
+other components like headers, nav bars, user authenticatios and role based
+approaches then this redux store is really helpful. As there is only very few 
+components at this moment not that much different can be seen but When it 
+comes to such stage with several other components it's really helpful this redux 
+approach because of that states can be access globally and no need to pass states 
+as props. 
