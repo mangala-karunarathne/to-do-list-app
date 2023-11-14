@@ -246,6 +246,7 @@ const TodoList = () => {
             .map((todoItem, index) => {
               return (
                 <div
+                  key={todoItem.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragOver={handleDragOver}
