@@ -433,7 +433,6 @@ a:hover {
   font-size: 1.5rem;
 }
 
-/* TASK APP CSS */
 .app {
   width: 100%;
   min-height: 100vh;
@@ -473,17 +472,19 @@ a:hover {
 .search-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px; /* Adjust the gap as needed */
+  gap: 10px; 
   margin-top: 1%;
 }
 .search-form label {
   display: block;
   font-size: 14px;
+  font-weight: bold;
   color: #111111;
   text-align: left;
 }
 .task-search {
   display: flex;
+  font-size: 16px;
   flex-direction: column;
 }
 .task-search input[type="search"] {
