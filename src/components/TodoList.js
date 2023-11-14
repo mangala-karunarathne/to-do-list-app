@@ -6,7 +6,6 @@ import { URL } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addTodo,
   addTodoItems,
   deleteTodo,
   editTodo,
@@ -17,7 +16,6 @@ import { FaCheckDouble, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const TodoList = () => {
   const [todoItems, setTodoItems] = useState([]);
-  // const [completedTasks, setCompletedTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [taskID, setTaskID] = useState("");
