@@ -23,8 +23,8 @@ A complete crud operation based To Do List
 
 ## Features to be implemented
 
-- [ ] Filtering and Searching
-- [ ] Drag and Drop based on priority
+- [ ] Add deadlines for tasks
+- [ ] Filter by deadlines
 - [ ] Add paginations
 
 ## Running Locally
@@ -51,4 +51,10 @@ cp .env.example .env
 
 ```bash
 npm start
+```
+
+5. Run unit tests
+
+```bash
+npm run test
 ```
